@@ -13,7 +13,7 @@ postInfo = "C:/Users/Ekaterina Yashkina/PycharmProjects/RedditAPI"+"/posts.csv"
 commentInfo = "C:/Users/Ekaterina Yashkina/PycharmProjects/RedditAPI"+"/comments_karma.csv"
 global limit
 limit = 0
-subreddits = ('all', 'learnpython', 'programming', 'javahelp', 'soccer', 'BlackPeopleTwitter','security','funny')
+subreddits = ('all', 'learnpython', 'programming', 'javahelp', 'soccer', 'BlackPeopleTwitter','security','funny','news')
 fields_sub = ('id', 'created_utc', 'score')
 fields_com = ('id', 'parent_id', 'score', 'created_utc')
 
@@ -63,22 +63,31 @@ def getAll(subreddit):
                     post_dict[field].append(to_dict[field])
                 counter+=1
                 print(counter)
-                submission.comments.replace_more(limit=0)
-                comments = submission.comments
-                lim = 0
-                for comment in comments:
-                    global limit
-                    limit = 0
-                    if (lim>10):
-                        break
-                    if comment.author is not None:
-                        comment_dict['author_id'].append(comment.author)
-                        comment_dict['karma'].append(comment.author.comment_karma)
-                        lim += 1
-                        to_dict = vars(comment)
-                        for field in fields_com:
-                            comment_dict[field].append(to_dict[field])
+
+                try:
+                    submission.comments.replace_more(limit=0)
+                    comments = submission.comments
+                    lim = 0
+                    for comment in comments:
+                        global limit
+                        limit = 0
+                        if (lim>10):
+                            break
+                        if comment.author is not None:
+                            comment_dict['author_id'].append(comment.author)
+                            try:
+                                comment_dict['karma'].append(comment.author.comment_karma)
+                            except AttributeError:
+                                comment_dict['karma'].append(0)
+                            lim += 1
+                            to_dict = vars(comment)
+                            for field in fields_com:
+                                comment_dict[field].append(to_dict[field])
+                except prawcore.exceptions.RequestException:
+                    continue
         except prawcore.exceptions.NotFound:
+            continue
+        except AttributeError:
             continue
 
 

@@ -55,7 +55,7 @@ def build_graph(days, dib_rm_karma, actual_karma):
     show()
 
 def main():
-    days, d, a = set_data('test_data_posts.csv', 'Meladroit1')
+    days, d, a = set_data('test_data_posts.csv', 'MisterBadIdea2')
     print(days)
     print(d)
     print(a)

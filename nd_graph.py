@@ -11,6 +11,8 @@ def plot():
      hmean = np.mean(h)
      hstd = np.std(h)
      pdf = stats.norm.pdf(h, hmean, hstd)
+     plt.xlabel("Average difference between DIB-RM and Reddit rating")
+     plt.ylabel("Distribution")
      plt.plot(h, pdf) # including h here is crucial
      plt.show()
 
@@ -33,7 +35,7 @@ def read(filename):
                c+=1
 
 def main():
-     read("test_data_posts.csv")
+     read("test_data_comments.csv")
      plot()
 
 if __name__ == "__main__":

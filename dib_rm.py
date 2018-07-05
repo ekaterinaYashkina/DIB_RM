@@ -1,9 +1,9 @@
 import csv, datetime
 from operator import itemgetter
-global a
-a = 1
-global b
-b = 0.9
+#global a
+#a = 1
+#global b
+#b = 0.9
 global ta, an
 ta = 3600*24
 global Ib
@@ -20,15 +20,17 @@ data = {
         "dib_rm":[]
     }
 
-def trust(dn, In, n):
-    global b
+def trust(dn, In, n, b):
     trust =[None]*n
     trust[0] = In[0]
     for i in range(1, n):
         trust[i] = trust[i-1]*pow(b, dn[i])+In[i]
     return trust
 
-def retrieve ():
+def retrieve (a, b):
+    with open("test_data_posts.csv", "w", newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerow(data.keys())
     users = {}
     with open ("posts.csv", "r", encoding="utf_8") as csvfile:
         reader = csv.reader(csvfile)
@@ -45,9 +47,9 @@ def retrieve ():
                 users[row[1]] = sorted(users[row[1]], key = itemgetter(5))
             c+=1
     for key in users:
-        In, dn, n = cum_part(users[key])
+        In, dn, n = cum_part(users[key], a)
         print (users[key], In, dn, n)
-        trust1 = trust(dn, In, n)
+        trust1 = trust(dn, In, n, b)
         u = users[key]
         for i in range(len(u)):
             data["author_id"].append(u[i][0])
@@ -68,9 +70,9 @@ def retrieve ():
 
 
 
-def cum_part(user_data):
+def cum_part(user_data, a):
     n = len(user_data)
-    global a, ta
+    global ta
     periods = []
     for row in user_data:
         if row [5] not in periods:
@@ -80,7 +82,7 @@ def cum_part(user_data):
     dn = [None]*n
     for i in range(0, n):
         data = user_data[i]
-        cum[i] = (float(data[-1]))*a*(1-1/(An+1))+float(data[-1])
+        cum[i] = (float(data[-1]))*float(a)*(1-1/(An+1))+float(data[-1])
         if i ==0:
             dn[i] = 1
         else:
@@ -92,9 +94,6 @@ def cum_part(user_data):
 
 
 if __name__ == "__main__":
-    with open("test_data_posts.csv", "w", newline='') as outfile:
-        writer = csv.writer(outfile)
-        writer.writerow(data.keys())
-    user_data = retrieve()
+    user_data = retrieve(4, 0.99)
     #print(user_data)
 

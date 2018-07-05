@@ -1,5 +1,5 @@
 import datetime, csv, math
-def main():
+def main(a, b):
     users = {}
     with open("C:/Users/Ekaterina Yashkina/PycharmProjects/RedditAPI"+"/test_data_posts.csv", "r") as outfile:
         reader = csv.reader(outfile)
@@ -29,9 +29,8 @@ def main():
 
     sum_us = sum_us/(float(len(users)*len(users)))
     out = 1-sum_us
-    with open("comparision.txt", "a", newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow([out])
+    with open("comparision_posts.txt", "a", newline='') as file:
+        file.write(str(a)+" "+str(b)+" "+str(out)+'\n')
 
 if __name__ == "__main__":
-    main()
+    main(4, 0.99)
